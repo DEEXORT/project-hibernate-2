@@ -1,4 +1,4 @@
-package com.javarush;
+package com.javarush.entity;
 
 public interface IEntity {
     Long getId();

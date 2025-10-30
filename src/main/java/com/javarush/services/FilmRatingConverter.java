@@ -1,5 +1,6 @@
-package com.javarush;
+package com.javarush.services;
 
+import com.javarush.entity.Film;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

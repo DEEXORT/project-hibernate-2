@@ -1,5 +1,7 @@
-package com.javarush;
+package com.javarush.dao;
 
+import com.javarush.entity.IEntity;
+import com.javarush.config.SessionCreator;
 import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;

@@ -1,5 +1,14 @@
-package com.javarush;
+package com.javarush.services;
 
+import com.javarush.dao.PaymentDao;
+import com.javarush.dao.RentalDao;
+import com.javarush.dao.StaffDao;
+import com.javarush.entity.Staff;
+import com.javarush.entity.Rental;
+import com.javarush.entity.Store;
+import com.javarush.entity.Customer;
+import com.javarush.entity.Inventory;
+import com.javarush.entity.Payment;
 import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
@@ -7,23 +16,21 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 public class StoreService {
-    private final SessionCreator sessionCreator;
-    private final StoreRepository storeRepository;
-    private final RentalRepository rentalRepository;
-    private final StaffRepository staffRepository;
-    private final PaymentRepository paymentRepository;
+    private final RentalDao rentalDao;
+    private final StaffDao staffDao;
+    private final PaymentDao paymentDao;
 
     public void returnRentedFilm(Rental rental) {
         if (rental.getReturnDate() == null) {
             rental.setReturnDate(LocalDateTime.now());
-            rentalRepository.update(rental);
+            rentalDao.update(rental);
         } else {
             throw new RuntimeException("Rental has already been returned");
         }
     }
 
     private Staff getAnyFreeStaff(Store store) {
-        return staffRepository.getAnyStaffFromStore(store.getId());
+        return staffDao.getAnyStaffFromStore(store.getId());
     }
 
     public Rental rentalFilm(Customer customer, Inventory inventory, Store store, BigDecimal amount) {
@@ -41,7 +48,7 @@ public class StoreService {
                 .amount(amount)
                 .paymentDate(LocalDateTime.now())
                 .build();
-        paymentRepository.save(payment);
+        paymentDao.save(payment);
         return rental;
     }
 }

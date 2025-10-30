@@ -1,12 +1,27 @@
-import config.SessionCreator;
-import dao.*;
-import entity.*;
+package com.javarush;
+
+import com.javarush.config.SessionCreator;
+import com.javarush.dao.AddressDao;
+import com.javarush.dao.CityDao;
+import com.javarush.dao.CustomerDao;
+import com.javarush.dao.PaymentDao;
+import com.javarush.dao.RentalDao;
+import com.javarush.dao.StaffDao;
+import com.javarush.dao.StoreDao;
+import com.javarush.entity.Customer;
+import com.javarush.entity.Address;
+import com.javarush.entity.City;
+import com.javarush.entity.Store;
+import com.javarush.entity.Rental;
+import com.javarush.entity.Staff;
+import com.javarush.entity.Payment;
+import com.javarush.entity.Country;
+import com.javarush.entity.Inventory;
+import com.javarush.services.CustomerService;
+import com.javarush.services.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
-import services.CustomerService;
-import services.RepositoryImpl;
-import services.StoreService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,30 +29,30 @@ import java.time.LocalDateTime;
 @Slf4j
 public class App {
     private static SessionCreator sessionCreator;
-    private static RepositoryImpl<Customer> customerRepository;
-    private static AddressRepository addressRepository;
-    private static CityRepository cityRepository;
-    private static StoreRepository storeRepository;
-    private static RentalRepository rentalRepository;
-    private static StaffRepository staffRepository;
-    private static PaymentRepository paymentRepository;
+    private static CustomerDao customerDao;
+    private static AddressDao addressDao;
+    private static CityDao cityDao;
+    private static StoreDao storeDao;
+    private static RentalDao rentalDao;
+    private static StaffDao staffDao;
+    private static PaymentDao paymentDao;
     private static CustomerService customerService;
     private static StoreService storeService;
 
 
     public static void main(String[] args) {
         sessionCreator = new SessionCreator();
-        customerRepository = new RepositoryImpl<>(sessionCreator, Customer.class);
-        addressRepository = new AddressRepository(sessionCreator, Address.class);
-        cityRepository = new CityRepository(sessionCreator, City.class);
-        storeRepository = new StoreRepository(sessionCreator, Store.class);
-        rentalRepository = new RentalRepository(sessionCreator, Rental.class);
-        staffRepository = new StaffRepository(sessionCreator, Staff.class);
-        paymentRepository = new PaymentRepository(sessionCreator, Payment.class);
+        customerDao = new CustomerDao(sessionCreator, Customer.class);
+        addressDao = new AddressDao(sessionCreator, Address.class);
+        cityDao = new CityDao(sessionCreator, City.class);
+        storeDao = new StoreDao(sessionCreator, Store.class);
+        rentalDao = new RentalDao(sessionCreator, Rental.class);
+        staffDao = new StaffDao(sessionCreator, Staff.class);
+        paymentDao = new PaymentDao(sessionCreator, Payment.class);
 
-        customerService = new CustomerService(sessionCreator, customerRepository,
-                addressRepository, cityRepository, storeRepository, rentalRepository);
-        storeService = new StoreService(sessionCreator, storeRepository, rentalRepository, staffRepository, paymentRepository);
+        customerService = new CustomerService(sessionCreator, customerDao,
+                addressDao, cityDao, storeDao);
+        storeService = new StoreService(rentalDao, staffDao, paymentDao);
 
         // Initial data
         Country country = Country.builder().country("Java Country").build();
@@ -58,7 +73,7 @@ public class App {
                 .lastName("Test2")
                 .address(address)
                 .createDate(LocalDateTime.now())
-                .store(storeRepository.findById(1L))
+                .store(storeDao.findById(1L))
                 .build();
 
         exampleSaveCustomer(customer);
@@ -66,31 +81,28 @@ public class App {
         exampleReturnFilm(rental);
     }
 
-    public static Customer exampleSaveCustomer(Customer customer) {
+    public static void exampleSaveCustomer(Customer customer) {
         customerService.save(customer);
         log.info("Customer saved : {}", customer);
-        return customer;
     }
 
     public static Rental exampleRentalFilm(Customer customer) {
         // Going to the store and contacting a free store staff
-        Store store = storeRepository.findById(1L);
+        Store store = storeDao.findById(1L);
 
         // Getting inventory from store with available film for rent
-        Inventory inventory = rentalRepository.getAnyInventoryWithAvailableFilm(store);
+        Inventory inventory = rentalDao.getAnyInventoryWithAvailableFilm(store);
         BigDecimal price = BigDecimal.valueOf(2.99);
-        log.info("Get available inventory: {}", inventory);
+        log.info("Get available inventory with ID = {}", inventory.getId());
 
         // Contacting a free store staff and rental the inventory with payment
         Rental rental = storeService.rentalFilm(customer, inventory, store, price);
-        log.info("Rental saved : {}", rental);
+        log.info("Rental saved with ID = {}", rental.getId());
         return rental;
     }
 
     public static void exampleReturnFilm(Rental rental) {
-//        Rental anyUnreturnedFilm = rentalRepository.getAnyUnreturnedFilm();
-
         storeService.returnRentedFilm(rental);
-        log.info("Rental returned : {}", rental);
+        log.info("Rental with ID = {} is returned {}", rental.getId(), rental.getReturnDate());
     }
 }

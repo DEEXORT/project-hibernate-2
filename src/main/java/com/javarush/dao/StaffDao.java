@@ -5,8 +5,8 @@ import com.javarush.entity.Staff;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-public class StaffRepository extends RepositoryImpl<Staff> {
-    public StaffRepository(SessionCreator sessionCreator, Class<Staff> staffClass) {
+public class StaffDao extends RepositoryImpl<Staff> {
+    public StaffDao(SessionCreator sessionCreator, Class<Staff> staffClass) {
         super(sessionCreator, staffClass);
     }
 

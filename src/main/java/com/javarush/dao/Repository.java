@@ -1,4 +1,4 @@
-package com.javarush;
+package com.javarush.dao;
 
 import java.util.List;
 

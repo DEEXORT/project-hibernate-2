@@ -7,29 +7,9 @@ import com.javarush.entity.Store;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-public class RentalRepository extends RepositoryImpl<Rental> {
-    public RentalRepository(SessionCreator sessionCreator, Class<Rental> rentalClass) {
+public class RentalDao extends RepositoryImpl<Rental> {
+    public RentalDao(SessionCreator sessionCreator, Class<Rental> rentalClass) {
         super(sessionCreator, rentalClass);
-    }
-
-    public Rental getAnyUnreturnedFilm() {
-        Session session = sessionCreator.getSession();
-        String hql = "select r from Rental r where r.returnDate is null";
-        Query<Rental> query = session.createQuery(hql, Rental.class);
-        query.setMaxResults(1);
-        return query.getSingleResult();
-    }
-
-    public Rental findActiveRentalByCustomerAndInventory(Long customerId, Long inventoryId) {
-        Session session = sessionCreator.getSession();
-        String hql = "select r from Rental r " +
-                "where r.customer.id = :customerId " +
-                "and r.inventory.id = :inventoryId " +
-                "and r.returnDate is null";
-        Query<Rental> query = session.createQuery(hql, Rental.class);
-        query.setParameter("customerId", customerId);
-        query.setParameter("inventoryId", inventoryId);
-        return query.uniqueResultOptional().orElse(null);
     }
 
     public Inventory getAnyInventoryWithAvailableFilm(Store store) {

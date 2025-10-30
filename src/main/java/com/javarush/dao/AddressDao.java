@@ -7,8 +7,8 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class AddressRepository extends RepositoryImpl<Address> {
-    public AddressRepository(SessionCreator sessionCreator, Class<Address> addressClass) {
+public class AddressDao extends RepositoryImpl<Address> {
+    public AddressDao(SessionCreator sessionCreator, Class<Address> addressClass) {
         super(sessionCreator, addressClass);
     }
 

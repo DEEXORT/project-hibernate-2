@@ -7,9 +7,9 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class CityRepository extends RepositoryImpl<City> {
+public class CityDao extends RepositoryImpl<City> {
 
-    public CityRepository(SessionCreator sessionCreator, Class<City> cityClass) {
+    public CityDao(SessionCreator sessionCreator, Class<City> cityClass) {
         super(sessionCreator, cityClass);
     }
 

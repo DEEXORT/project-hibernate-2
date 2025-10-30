@@ -1,4 +1,4 @@
-package com.javarush;
+package com.javarush.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

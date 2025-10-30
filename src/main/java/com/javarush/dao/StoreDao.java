@@ -7,8 +7,8 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class StoreRepository extends RepositoryImpl<Store> {
-    public StoreRepository(SessionCreator sessionCreator, Class<Store> storeClass) {
+public class StoreDao extends RepositoryImpl<Store> {
+    public StoreDao(SessionCreator sessionCreator, Class<Store> storeClass) {
         super(sessionCreator, storeClass);
     }
 
