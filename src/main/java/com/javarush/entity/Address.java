@@ -39,9 +39,6 @@ public class Address implements IEntity {
     @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
-    @Column(name = "location", nullable = false)
-    private Point location;
-
     @Column(name = "last_update", nullable = false)
     @UpdateTimestamp
     private LocalDateTime lastUpdate;

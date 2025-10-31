@@ -20,8 +20,6 @@ import com.javarush.entity.Inventory;
 import com.javarush.services.CustomerService;
 import com.javarush.services.StoreService;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -61,7 +59,6 @@ public class App {
                 .address("Cascade Avenue")
                 .city(city)
                 .phone("777-777")
-                .location(new GeometryFactory().createPoint(new Coordinate(56.8, 12.41)))
                 .postalCode("12345")
                 .address2("address2")
                 .district("district")
